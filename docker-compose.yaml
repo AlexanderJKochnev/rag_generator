@@ -1,0 +1,28 @@
+services:
+  import-service:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: import-service
+    # depends_on:
+    #   - clickhouse
+    volumes:
+      # CSV файлы
+      - ${BIND_VOLUMES}/rag_csv:/app/data
+      - ${BIND_VOLUMES}/distill/models:/app/models
+      - ${BIND_VOLUMES}/distill/cache:/app/cache
+    environment:
+      CH_HOST: ${CH_HOST}
+      CH_PORT: ${CH_PORT}
+      CH_USER: ${CH_USER}
+      CH_PASSWORD: ${CH_PASSWORD}
+    # Не запускаем автоматически, только по команде
+    restart: "no"
+    networks:
+      - clickhouse_network
+
+networks:
+  clickhouse_network:
+    name: clickhouse_network
+    driver: bridge
+    external: true
