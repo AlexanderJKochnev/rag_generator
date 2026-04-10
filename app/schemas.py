@@ -10,6 +10,7 @@ class BeverageCategory(str, Enum):
     WHISKY = "whisky"
     BEER = "beer"
     SPIRITS = "spirits"
+    OTHER = "other"
 
 
 class BeverageBase(BaseModel):
