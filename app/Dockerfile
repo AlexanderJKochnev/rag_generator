@@ -8,9 +8,9 @@ RUN apt update && apt install -y \
 WORKDIR /app
 
 COPY requirements.txt .
-
+RUN pip3 install --no-cache-dir -r requirements.txt
 # RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
-RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
+# RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
 # RUN pip3 install --no-cache-dir -r requirements.txt
 # RUN pip install --user --no-cache-dir -r requirements.txt
 # Отдельно устанавливаем clickhouse-connect (последний слой, кэшируется отдельно)
