@@ -3,9 +3,9 @@ from typing import Optional
 
 import clickhouse_connect
 from project_config import settings
-from fastapi import Request
-from loguru import logger
-from contextlib import asynccontextmanager
+# from fastapi import Request
+# from loguru import logger
+# from contextlib import asynccontextmanager
 
 
 class ClickHouseManager:
@@ -40,21 +40,3 @@ class ClickHouseManager:
         if not self._client:
             raise RuntimeError("ClickHouse not connected")
         return self._client
-
-
-# Зависимость (Dependency Injection) для получения клиента в эндпоинтах
-
-
-async def get_ch_client(request: Request):
-    return request.app.state.ch_client
-
-
-@asynccontextmanager
-async def get_ch_session():
-    """Контекстный менеджер для сессии (для фоновых задач)"""
-    client = await get_ch_client()
-    try:
-        yield client
-    except Exception as e:
-        logger.error(f"Session error: {e}")
-        raise
