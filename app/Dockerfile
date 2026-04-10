@@ -9,5 +9,4 @@ RUN apt update && apt install -y libgomp1 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=builder /install /usr/local
 COPY . ./app
-COPY .env .
 CMD ["python", "main.py"]
