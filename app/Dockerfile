@@ -12,10 +12,11 @@ COPY requirements.txt .
 # RUN sed -i '/clickhouse-connect/d' requirements.txt
 
 # Устанавливаем все зависимости, кроме clickhouse-connect
+RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
 # RUN pip3 install --no-cache-dir -r requirements.txt
-RUN pip install --user --no-cache-dir -r requirements.txt
+# RUN pip install --user --no-cache-dir -r requirements.txt
 # Отдельно устанавливаем clickhouse-connect (последний слой, кэшируется отдельно)
-RUN pip install --no-cache-dir "clickhouse-connect[async]==0.12.0rc1"
+RUN pip3 install --no-cache-dir "clickhouse-connect[async]==0.12.0rc1"
 
 # Копируем код приложения
 COPY . .
