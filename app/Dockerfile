@@ -1,4 +1,5 @@
 FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+FROM nvidia/cuda:12.4.0-run
 # FROM nvidia/cuda:12.5.1-runtime-ubuntu24.04
 # Установка Python и системных зависимостей
 RUN apt update && apt install -y \

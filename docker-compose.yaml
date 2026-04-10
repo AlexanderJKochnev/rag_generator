@@ -27,6 +27,13 @@ services:
       CH_PASSWORD: ${CH_PASSWORD}
     # Не запускаем автоматически, только по команде
     restart: "no"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     networks:
       - clickhouse_network
 
