@@ -18,9 +18,15 @@ def parse_spirits(row: pd.Series, filename: str) -> Dict[str, Any]:
         attributes['base_ingredient'] = row['Base Ingredient']
     if pd.notna(row.get('Years Aged')):
         attributes['years_aged'] = int(row['Years Aged'])
+    
+    country = row.get('Country')
+    country = country if pd.notna(country) else None
+    brand = row.get('Brand')
+    brand = brand if pd.notna(brand) else None
 
     return {'name': str(name), 'description': str(description), 'category': 'spirits',
-            'country': row.get('Country', ''), 'brand': row.get('Brand', ''),
+            'country': country,
+            'brand': brand,
             'abv': float(str(row['ABV']).replace('%', '')) if pd.notna(row.get('ABV')) else None,
             'price': float(row['Price'].replace('$', '')) if pd.notna(row.get('Price')) else None,
             'rating': float(row['Rating']) if pd.notna(row.get('Rating')) else None,

@@ -39,9 +39,16 @@ def parse_beer(row: pd.Series, filename: str) -> Dict[str, Any]:
         attributes['food_pairing'] = row['Food Pairing']
     if pd.notna(row.get('Suggested Serving Temperature')):
         attributes['serving_temp'] = row['Suggested Serving Temperature']
-
-    return {'name': str(name), 'description': str(description), 'category': 'beer', 'country': row.get('Country', ''),
-            'brand': row.get('Brand', ''), 'abv': attributes.get('abv'),
+    
+    country = row.get('Country')
+    country = country if pd.notna(country) else None
+    brand = row.get('Brand')
+    brand = brand if pd.notna(brand) else None
+    
+    return {'name': str(name), 'description': str(description), 'category': 'beer',
+            'country': country,
+            'brand': brand,
+            'abv': attributes.get('abv'),
             'price': float(row['Price'].replace('$', '')) if pd.notna(row.get('Price')) else None,
             'rating': float(row['Rating']) if pd.notna(row.get('Rating')) else None,
             'rate_count': int(row['Rate Count']) if pd.notna(row.get('Rate Count')) else None, 'attributes': attributes,

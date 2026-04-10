@@ -25,9 +25,15 @@ def parse_wine_data(row: pd.Series, filename: str) -> Dict[str, Any]:
         attributes['sweet_dry_scale'] = row['Sweet-Dry Scale']
     if pd.notna(row.get('Body')):
         attributes['body'] = row['Body']
-
-    return {'name': str(name), 'description': str(description), 'category': 'wine', 'country': row.get('Country', ''),
-            'brand': row.get('Brand', ''), 'abv': None,  # В этом файле нет ABV
+    country = row.get('Country')
+    country = country if pd.notna(country) else None
+    brand = row.get('Brand')
+    brand = brand if pd.notna(brand) else None
+    
+    return {'name': str(name), 'description': str(description), 'category': 'wine',
+            'country': country,
+            'brand': brand,
+            'abv': None,  # В этом файле нет ABV
             'price': float(row['Price'].replace('$', '')) if pd.notna(row.get('Price')) else None,
             'rating': float(row['Rating']) if pd.notna(row.get('Rating')) else None,
             'rate_count': int(row['Rate Count']) if pd.notna(row.get('Rate Count')) else None, 'attributes': attributes,

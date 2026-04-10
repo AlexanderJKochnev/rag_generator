@@ -15,9 +15,11 @@ def parse_wine(row: pd.Series, filename: str) -> Dict[str, Any]:
 
     attributes = {'appellation': row.get('appellation', ''), 'varietal': varietal, 'winery': winery,
                   'reviewer': row.get('reviewer', '')}
-
+    country = row.get('country')
+    country = country if pd.notna(country) else None
     return {'name': str(name), 'description': str(description), 'category': 'wine',
-            'country': row.get('country', 'US') if pd.notna(row.get('country')) else 'US', 'brand': winery,
+            'country': country,
+            'brand': winery,
             'abv': float(row['alcohol'].replace('%', '')) if pd.notna(row.get('alcohol')) else None,
             'price': float(row['price']) if pd.notna(row.get('price')) else None,
             'rating': float(row['rating']) if pd.notna(row.get('rating')) else None, 'rate_count': None,

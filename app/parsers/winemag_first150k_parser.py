@@ -19,12 +19,15 @@ def parse_winemag_first150k(row: pd.Series, filename: str) -> Dict[str, Any]:
         'region_1': row.get('region_1', ''),
         'region_2': row.get('region_2', '')
     }
-
+    country = row.get('country')
+    country = country if pd.notna(country) else None
+    brand = row.get('winery')
+    brand = brand if pd.notna(brand) else None
     return {
         'name': str(name),
         'description': str(description),
         'category': 'wine',
-        'country': row.get('country', ''),
+        'country': country,
         'brand': winery,
         'abv': None,
         'price': float(row['price']) if pd.notna(row.get('price')) else None,
