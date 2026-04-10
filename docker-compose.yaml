@@ -1,5 +1,7 @@
 services:
   import-service:
+    env_file:
+      - ./app/.env
     build:
       context: ./app
       dockerfile: Dockerfile

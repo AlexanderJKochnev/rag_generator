@@ -8,6 +8,7 @@ FROM python:3.12-slim
 RUN apt update && apt install -y libgomp1 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=builder /install /usr/local
-COPY . ./app
-COPY ./.env .
+# Копируем ВСЕ файлы из контекста (папка ./app) в /app
+COPY . .
+# .env будет скопирован автоматически
 CMD ["python", "main.py"]
