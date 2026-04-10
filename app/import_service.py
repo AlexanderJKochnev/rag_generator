@@ -1,10 +1,10 @@
-# app.support.clickhouse.import_service.services.import_service.py
+# support.clickhouse.import_service.services.import_service.py
 import hashlib
 
 import pandas as pd
 from loguru import logger
-from app.schemas import BeverageCreate
-from app.embedding import ImportEmbedding
+from schemas import BeverageCreate
+from embedding import ImportEmbedding
 
 
 class ImportService:

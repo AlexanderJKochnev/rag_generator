@@ -1,7 +1,7 @@
 # app.support.clickhouse.repository.py
 from typing import Optional, List, Dict
 import json
-from app.schemas import BeverageCategory, BeverageCreate
+from schemas import BeverageCategory, BeverageCreate
 
 
 class BeverageRepository:

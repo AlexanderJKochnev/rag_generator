@@ -1,13 +1,13 @@
 # parsers/__init__.py
 import pandas as pd
 
-from import_service.parsers.beer_parser import parse_beer
-from import_service.parsers.scotch_parser import parse_scotch
-from import_service.parsers.spirits_parser import parse_spirits
-from import_service.parsers.wine_data_parser import parse_wine_data
-from import_service.parsers.wine_parser import parse_wine
-from import_service.parsers.winemag_130k_parser import parse_winemag_130k
-from import_service.parsers.winemag_first150k_parser import parse_winemag_first150k
+from parsers.beer_parser import parse_beer
+from parsers.scotch_parser import parse_scotch
+from parsers.spirits_parser import parse_spirits
+from parsers.wine_data_parser import parse_wine_data
+from parsers.wine_parser import parse_wine
+from parsers.winemag_130k_parser import parse_winemag_130k
+from parsers.winemag_first150k_parser import parse_winemag_first150k
 
 PARSERS = {'beer_data.csv': parse_beer, 'scotch_review.csv': parse_scotch, 'spirits_data.csv': parse_spirits,
            'wine.csv': parse_wine, 'wine_data.csv': parse_wine_data, 'winemag-data-130k-v2.csv': parse_winemag_130k,

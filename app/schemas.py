@@ -1,4 +1,4 @@
-# app.support.clickhouse.schemas.py
+# support.clickhouse.schemas.py
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 from datetime import datetime
