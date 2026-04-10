@@ -8,9 +8,10 @@ services:
     container_name: import-service
     # depends_on:
     #   - clickhouse
-    command: ["sh"]
-    stdin_open: true   # эквивалент -i
-    tty: true          # эквивалент -t
+    # три команды ниже для простого входа в контейнер
+    # command: ["sh"]
+    # stdin_open: true   # эквивалент -i
+    # tty: true          # эквивалент -t
     volumes:
       # CSV файлы
       - ${BIND_VOLUMES}/rag_csv:/app/data
