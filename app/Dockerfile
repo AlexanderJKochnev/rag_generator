@@ -8,5 +8,5 @@ FROM python:3.12-slim
 RUN apt update && apt install -y libgomp1 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=builder /install /usr/local
-COPY . .
+COPY . ./app
 CMD ["python", "main.py"]
