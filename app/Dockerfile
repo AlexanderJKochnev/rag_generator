@@ -33,3 +33,8 @@ COPY requirements.txt .
 
 # Устанавливаем ВСЕ зависимости (включая clickhouse-connect) в отдельную директорию
 RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
+
+# Копируем код приложения
+COPY . .
+
+CMD ["python3", "main.py"]
