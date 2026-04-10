@@ -1,38 +1,21 @@
-# ==================== СТАДИЯ 1: СБОРКА ЗАВИСИМОСТЕЙ ====================
-FROM nvidia/cuda:12.5.1-runtime-ubuntu24.04 AS builder
-# FROM nvidia/cuda:12.1-runtime-ubuntu22 AS builder
-RUN apt update && apt install -y \
-    python3.12 python3-pip git cmake build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-COPY requirements.txt .
-
-# Устанавливаем ВСЕ зависимости (включая clickhouse-connect) в отдельную директорию
-RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
-
-# ==================== СТАДИЯ 2: ФИНАЛЬНЫЙ ОБРАЗ ====================
-# FROM nvidia/cuda:12.1-runtime-ubuntu22.04
 FROM nvidia/cuda:12.5.1-runtime-ubuntu24.04
+
+# Установка Python и системных зависимостей
 RUN apt update && apt install -y \
-    python3.12 python3-pip git cmake build-essential \
+    python3.12 python3-pip libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
+# Копируем requirements.txt и удаляем из него строку с clickhouse-connect (если есть)
 COPY requirements.txt .
+# RUN sed -i '/clickhouse-connect/d' requirements.txt
 
-# Устанавливаем ВСЕ зависимости (включая clickhouse-connect) в отдельную директорию
-RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
+# Устанавливаем все зависимости, кроме clickhouse-connect
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-RUN apt update && apt install -y \
-    python3.12 python3-pip git cmake build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-COPY requirements.txt .
-
-# Устанавливаем ВСЕ зависимости (включая clickhouse-connect) в отдельную директорию
-RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
+# Отдельно устанавливаем clickhouse-connect (последний слой, кэшируется отдельно)
+RUN pip3 install --no-cache-dir "clickhouse-connect[async]==0.12.0rc1"
 
 # Копируем код приложения
 COPY . .
