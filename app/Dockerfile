@@ -15,7 +15,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # RUN pip install --user --no-cache-dir -r requirements.txt
 # Отдельно устанавливаем clickhouse-connect (последний слой, кэшируется отдельно)
 # RUN pip3 install --no-cache-dir --prefix=/install "clickhouse-connect[async]==0.12.0rc1"
-RUN pip3 install --no-cache-dir --break-system-packages "clickhouse-connect[async]==0.12.0rc1"
+# RUN pip3 install --no-cache-dir --break-system-packages "clickhouse-connect[async]==0.12.0rc1"
 
 # Копируем код приложения
 COPY . .
