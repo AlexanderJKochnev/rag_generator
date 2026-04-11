@@ -8,7 +8,7 @@ def parse_spirits(row: pd.Series, filename: str) -> Dict[str, Any]:
     if pd.isna(description):
         tasting = row.get('Tasting Notes', '')
         description = tasting if pd.notna(tasting) else ''
-    
+
     attributes = {}
     if pd.notna(row.get('Categories')):
         attributes['categories'] = str(row['Categories'])
@@ -19,23 +19,26 @@ def parse_spirits(row: pd.Series, filename: str) -> Dict[str, Any]:
     if pd.notna(row.get('Years Aged')):
         try:
             attributes['years_aged'] = int(row['Years Aged'])
-        except:
+        except Exception:
             pass
-    
+
+    # Обработка ABV (убираем % и пробелы)
     abv = None
     if pd.notna(row.get('ABV')):
         try:
-            abv = float(str(row['ABV']).replace('%', ''))
-        except:
+            abv_str = str(row['ABV']).replace('%', '').replace(' ', '').strip()
+            if abv_str:
+                abv = float(abv_str)
+        except Exception:
             pass
-    
+
     price = None
     if pd.notna(row.get('Price')):
         try:
             price = float(str(row['Price']).replace('$', ''))
-        except:
+        except Exception:
             pass
-    
+
     country = row.get('Country')
     country = country if pd.notna(country) else None
     brand = row.get('Brand')
@@ -44,7 +47,18 @@ def parse_spirits(row: pd.Series, filename: str) -> Dict[str, Any]:
     rating = float(rating) if pd.notna(rating) else None
     rate_count = row.get('Rate Count')
     rate_count = int(rate_count) if pd.notna(rate_count) else None
-    
-    return {'name': str(name).strip(), 'description': str(description)[:5000], 'category': 'spirits',
-            'country': country, 'brand': brand, 'abv': abv, 'price': price, 'rating': rating, 'rate_count': rate_count,
+
+    # Извлекаем категорию (Liqueur → spirits)
+    raw_category = row.get('Categories', '')
+    if pd.notna(raw_category):
+        cat = str(raw_category).lower()
+        if 'liqueur' in cat:
+            category = 'spirits'
+        else:
+            category = cat  # можно дополнить другими правилами
+    else:
+        category = 'spirits'  # значение по умолчанию
+
+    return {'name': str(name).strip(), 'description': str(description)[:5000], 'category': category, 'country': country,
+            'brand': brand, 'abv': abv, 'price': price, 'rating': rating, 'rate_count': rate_count,
             'attributes': attributes, 'source_file': filename}

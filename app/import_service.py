@@ -117,5 +117,7 @@ class ImportService:
                    "sparkling wine", "red wine", "white wine", "rose wine",
                    "sake", "port", "ice wine", "dessert wines", "non-alcoholic wine",
                    "sherry", "madeira", "champagne", "marsala", "vermouth", "orange wine",
-                   "pedro ximenez", "zinfandel", "fortified wine", "fruit wine", "chianti blend"}
+                   "pedro ximenez", "zinfandel", "fortified wine", "fruit wine", "chianti blend",
+                   "cachaca", "sangria", "mezcal", "absinthe", "soju", "ouzo", "grain alcohol",
+                   "aquavit", "aguardiente", "other"}
         return cat if cat in allowed else "other"
