@@ -8,8 +8,9 @@ from typing import Callable, Dict, Any, Optional
 from loguru import logger
 from embedding import ImportEmbedding
 from beverage_repository import BeverageRepository
-from schemas import BeverageCreate  # предполагаем, что Pydantic-схема лежит в schemas.py
-from parsers import PARSERS  # если нужно, но не обязательно
+from schemas import BeverageCreate, BeverageCategory
+# from parsers import PARSERS  # если нужно, но не обязательно
+
 
 
 class ImportService:
@@ -83,7 +84,7 @@ class ImportService:
         for data, emb in zip(parsed_data, embeddings):
             # Создаём Pydantic-модель для вставки
             t4 = time.time()
-            from schemas import BeverageCreate, BeverageCategory
+            # from schemas import BeverageCreate, BeverageCategory
             # Преобразуем категорию (строка -> enum)
             try:
                 category = BeverageCategory(data['category'].lower())
