@@ -6,9 +6,16 @@ from click_async import ClickHouseManager
 from parsers import PARSERS
 from import_service import ImportService
 from beverage_repository import BeverageRepository
+import torch
 
 
 async def main():
+    print(f"CUDA available: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        print(f"Current device: {torch.cuda.get_device_name(0)}")
+        print(f"CUDA version: {torch.version.cuda}")
+    else:
+        print("CUDA is NOT available. Check driver/toolkit.")
     ch = ClickHouseManager()  # host="clickhouse", port=8123, user="default", password="")
     try:
         await ch.connect()
