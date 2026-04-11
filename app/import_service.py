@@ -113,5 +113,9 @@ class ImportService:
     def normalize_category(self, cat_str: str) -> str:
         cat = cat_str.lower().strip()
         allowed = {"wine", "whisky", "beer", "spirits", "vodka", "gin", "schnapps",
-                   "brandy", "rum", "tequila", "ready-to-drink", "baijiu"}
+                   "brandy", "rum", "tequila", "ready-to-drink", "baijiu",
+                   "sparkling wine", "red wine", "white wine", "rose wine",
+                   "sake", "port", "ice wine", "dessert wines", "non-alcoholic wine",
+                   "sherry", "madeira", "champagne", "marsala", "vermouth", "orange wine",
+                   "pedro ximenez", "zinfandel", "fortified wine", "fruit wine", "chianti blend"}
         return cat if cat in allowed else "other"

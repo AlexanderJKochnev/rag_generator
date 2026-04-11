@@ -12,10 +12,10 @@ from parsers.winemag_first150k_parser import parse_winemag_first150k
 PARSERS = {'beer_data.csv': parse_beer,
            'scotch_review.csv': parse_scotch,
            'wine.csv': parse_wine,
-           'wine_data.csv': parse_wine_data,
            'winemag-data-130k-v2.csv': parse_winemag_130k,
            'winemag-data_first150k.csv': parse_winemag_first150k,
-           'spirits_data.csv': parse_spirits, }
+           'spirits_data.csv': parse_spirits,
+           'wine_data.csv': parse_wine_data,}
 
 
 def import_all_csv_files(client, embedding_model):
