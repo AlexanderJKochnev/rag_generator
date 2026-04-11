@@ -82,6 +82,7 @@ class ImportService:
         inserted = 0
         for data, emb in zip(parsed_data, embeddings):
             # Создаём Pydantic-модель для вставки
+            t4 = time.time()
             from schemas import BeverageCreate, BeverageCategory
             # Преобразуем категорию (строка -> enum)
             try:
@@ -103,6 +104,9 @@ class ImportService:
             )
             await self.repo.create(beverage, file_hash, str(file_path), emb)
             inserted += 1
+            if inserted % 100 == 0:
+                t5 = time.time()
+                logger.info(f"inserted records {inserted}: {t5 - t4:.2f}s")
 
         # 5. Обязательная выгрузка GPU-модели после импорта
         self.embedder.unload()

@@ -46,7 +46,7 @@ class ImportEmbedding:
         emb = self._model.encode(
             texts,
             normalize_embeddings=True,
-            batch_size=2048,
+            batch_size=1024,
             show_progress_bar=False
         )
         t1 = time.time()
