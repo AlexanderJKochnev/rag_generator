@@ -80,7 +80,7 @@ class ImportService:
         t3 = time.time()
         logger.info(f"Embedding: {t3 - t2:.2f}s")
         # 4. Сохранение в ClickHouse
-        BATCH_INSERT_SIZE = 10000
+        BATCH_INSERT_SIZE = 50000
         rows_gen = ([data['name'],
                      data['description'],
                      self.normalize_category(data['category']),
@@ -94,12 +94,15 @@ class ImportService:
                      file_hash,  # хэш файла
                      str(file_path)  # source_file
                      ] for data, emb in zip(parsed_data, embeddings))
-
+        c = 0
         while True:
+            t4 = time.time()
             batch = list(islice(rows_gen, BATCH_INSERT_SIZE))
             if not batch:
                 break
             await self.repo.create(batch)
+            t5 = time.time()
+            logger.info(f"added {c + BATCH_INSERT_SIZE} records: {t5 - t4:.2f}s")
 
         # 5. Обязательная выгрузка GPU-модели после импорта
         self.embedder.unload()
@@ -109,5 +112,6 @@ class ImportService:
 
     def normalize_category(self, cat_str: str) -> str:
         cat = cat_str.lower().strip()
-        allowed = {"wine", "whisky", "beer", "spirits"}
+        allowed = {"wine", "whisky", "beer", "spirits", "vodka", "gin", "schnapps",
+                   "brandy", "rum", "tequila", "ready-to-drink", "baijiu"}
         return cat if cat in allowed else "other"

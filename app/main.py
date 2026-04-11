@@ -25,6 +25,8 @@ async def main():
         for name, parser in PARSERS.items():
             if (Path("/app/data") / name).exists():
                 await importer.import_file(name, parser)
+        importer.embedder.unload()
+        logger.info("All imports completed, GPU model unloaded")
     finally:
         await ch.close()
 
