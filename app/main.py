@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import asyncio
-# from loguru import logger
+from loguru import logger
 from pathlib import Path
 from click_async import ClickHouseManager
 from parsers import PARSERS
@@ -10,12 +10,12 @@ import torch
 
 
 async def main():
-    print(f"CUDA available: {torch.cuda.is_available()}")
+    logger.info(f"CUDA available: {torch.cuda.is_available()}")
     if torch.cuda.is_available():
-        print(f"Current device: {torch.cuda.get_device_name(0)}")
-        print(f"CUDA version: {torch.version.cuda}")
+        logger.info(f"Current device: {torch.cuda.get_device_name(0)}")
+        logger.info(f"CUDA version: {torch.version.cuda}")
     else:
-        print("CUDA is NOT available. Check driver/toolkit.")
+        logger.info("CUDA is NOT available. Check driver/toolkit.")
     ch = ClickHouseManager()  # host="clickhouse", port=8123, user="default", password="")
     try:
         await ch.connect()

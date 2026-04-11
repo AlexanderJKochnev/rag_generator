@@ -2,6 +2,7 @@
 
 # import_service/embedding.py
 from pathlib import Path
+import time
 from sentence_transformers import SentenceTransformer
 from loguru import logger
 import torch
@@ -40,13 +41,18 @@ class ImportEmbedding:
 
     def encode(self, texts: list[str]) -> list[list[float]]:
         self._load()
+        t0 = time.time()
         # Используем batch_size=256 для эффективности на GPU
-        return self._model.encode(
+        emb = self._model.encode(
             texts,
             normalize_embeddings=True,
-            batch_size=1024,
+            batch_size=2048,
             show_progress_bar=False
-        ).tolist()
+        )
+        t1 = time.time()
+        print(f"Encode time for {len(texts)} texts: {t1 - t0:.2f}s")
+        return emb.tolist()
+
 
     def unload(self):
         if self._model:
