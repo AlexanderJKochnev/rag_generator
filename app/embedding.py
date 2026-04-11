@@ -44,7 +44,7 @@ class ImportEmbedding:
         return self._model.encode(
             texts,
             normalize_embeddings=True,
-            batch_size=256,
+            batch_size=1024,
             show_progress_bar=False
         ).tolist()
 

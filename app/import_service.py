@@ -1,6 +1,7 @@
 # support.clickhouse.import_service.services.import_service.py
 # import_service/import_service.py
 import hashlib
+import time
 import pandas as pd
 from pathlib import Path
 from typing import Callable, Dict, Any, Optional
@@ -38,6 +39,8 @@ class ImportService:
         :param parser_func: Функция-парсер для данного типа CSV
         :return: Словарь с результатом импорта
         """
+        logger.info(f"CSV read: {t1 - t0:.2f}s")
+        
         file_path = self.data_dir / file_name
         if not file_path.exists():
             raise FileNotFoundError(f"CSV file not found: {file_path}")
@@ -49,9 +52,11 @@ class ImportService:
             return {"file": file_name, "status": "skipped", "rows": 0}
 
         logger.info(f"Importing {file_name}...")
+        t0 = time.time()
         df = pd.read_csv(file_path)
+        t1 = time.time()
         total_rows = len(df)
-        logger.info(f"Read {total_rows} rows from {file_name}")
+        logger.info(f"Read {total_rows} rows from {file_name}, {t1 - t0:.2f}s")
 
         # 2. Парсинг строк и подготовка текстов для эмбеддингов
         parsed_data = []
@@ -64,7 +69,8 @@ class ImportService:
             except Exception as e:
                 logger.error(f"Parse error in {file_name} at row {idx}: {e}")
                 continue
-
+        t2 = time.time();
+        logger.info(f"Parsing: {t2 - t1:.2f}s")
         if not parsed_data:
             logger.warning(f"No valid rows in {file_name}")
             return {"file": file_name, "status": "failed", "rows": 0}
@@ -72,7 +78,8 @@ class ImportService:
         # 3. Генерация эмбеддингов (GPU-модель)
         logger.info(f"Generating embeddings for {len(parsed_data)} rows...")
         embeddings = self.embedder.encode(texts_for_embedding)
-
+        t3 = time.time()
+        logger.info(f"Embedding: {t3 - t2:.2f}s")
         # 4. Сохранение в ClickHouse
         inserted = 0
         for data, emb in zip(parsed_data, embeddings):
