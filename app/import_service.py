@@ -39,8 +39,6 @@ class ImportService:
         :param parser_func: Функция-парсер для данного типа CSV
         :return: Словарь с результатом импорта
         """
-        logger.info(f"CSV read: {t1 - t0:.2f}s")
-        
         file_path = self.data_dir / file_name
         if not file_path.exists():
             raise FileNotFoundError(f"CSV file not found: {file_path}")
