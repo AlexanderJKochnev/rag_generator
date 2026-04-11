@@ -2,15 +2,15 @@
 # import_service/import_service.py
 import hashlib
 import time
+from itertools import islice
 import pandas as pd
 from pathlib import Path
 from typing import Callable, Dict, Any, Optional
 from loguru import logger
 from embedding import ImportEmbedding
 from beverage_repository import BeverageRepository
-from schemas import BeverageCreate, BeverageCategory
+# from schemas import BeverageCreate, BeverageCategory
 # from parsers import PARSERS  # если нужно, но не обязательно
-
 
 
 class ImportService:
@@ -68,7 +68,7 @@ class ImportService:
             except Exception as e:
                 logger.error(f"Parse error in {file_name} at row {idx}: {e}")
                 continue
-        t2 = time.time();
+        t2 = time.time()
         logger.info(f"Parsing: {t2 - t1:.2f}s")
         if not parsed_data:
             logger.warning(f"No valid rows in {file_name}")
@@ -80,37 +80,28 @@ class ImportService:
         t3 = time.time()
         logger.info(f"Embedding: {t3 - t2:.2f}s")
         # 4. Сохранение в ClickHouse
-        inserted = 0
-        for data, emb in zip(parsed_data, embeddings):
-            # Создаём Pydantic-модель для вставки
-            t4 = time.time()
-            # from schemas import BeverageCreate, BeverageCategory
-            # Преобразуем категорию (строка -> enum)
-            try:
-                category = BeverageCategory(data['category'].lower())
-            except ValueError:
-                logger.warning(f"Unknown category '{data['category']}', using 'other'")
-                category = BeverageCategory.OTHER
+        BATCH_INSERT_SIZE = 10000
+        rows_gen = ([data['name'], data['description'], self.normalize_category(data['category']), data.get('country'),
+                     data.get('brand'), data.get('abv'), data.get(
+                         'price'), data.get('rating'), data.get('attributes', {}),
+                     emb,  # embedding
+                     file_hash,  # хэш файла
+                     str(file_path)  # source_file
+                     ] for data, emb in zip(parsed_data, embeddings))
 
-            beverage = BeverageCreate(
-                name=data['name'],
-                description=data['description'],
-                category=category,
-                country=data.get('country'),
-                brand=data.get('brand'),
-                abv=data.get('abv'),
-                price=data.get('price'),
-                rating=data.get('rating'),
-                attributes=data.get('attributes', {})
-            )
-            await self.repo.create(beverage, file_hash, str(file_path), emb)
-            inserted += 1
-            if inserted % 100 == 0:
-                t5 = time.time()
-                logger.info(f"inserted records {inserted}: {t5 - t4:.2f}s")
+        while True:
+            batch = list(islice(rows_gen, BATCH_INSERT_SIZE))
+            if not batch:
+                break
+            await self.repo.create(batch)
 
         # 5. Обязательная выгрузка GPU-модели после импорта
         self.embedder.unload()
 
-        logger.success(f"✅ Imported {inserted} rows from {file_name}")
-        return {"file": file_name, "status": "imported", "rows": inserted}
+        logger.success(f"✅ Imported {len(parsed_data)} rows from {file_name}")
+        return {"file": file_name, "status": "imported", "rows": len(parsed_data)}
+
+    def normalize_category(self, cat_str: str) -> str:
+        cat = cat_str.lower().strip()
+        allowed = {"wine", "whisky", "beer", "spirits"}
+        return cat if cat in allowed else "other"

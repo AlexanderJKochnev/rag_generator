@@ -11,11 +11,10 @@ class BeverageRepository:
         self.client = client
         self.table = "beverages_rag"
 
-    async def create(self, data: BeverageCreate, file_hash: str, source_file: str, embedding: List[float]) -> str:
+    async def create(self, data: list, file_hash: str, source_file: str, embedding: List[float]) -> str:
         """Создание записи"""
         result = await self.client.insert(
-            self.table, [[data.name, data.description, data.category.value, data.country, data.brand, data.abv,
-                          data.price, data.rating, json.dumps(data.attributes), embedding, file_hash, source_file]],
+            self.table, data,
             column_names=['name', 'description', 'category', 'country', 'brand', 'abv', 'price', 'rating',
                           'attributes', 'embedding', 'file_hash', 'source_file']
         )
