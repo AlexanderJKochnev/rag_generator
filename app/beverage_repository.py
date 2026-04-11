@@ -100,17 +100,16 @@ class BeverageRepository:
             f"SELECT COUNT(*) FROM {self.table} WHERE file_hash = %(hash)s", {'hash': file_hash}
         )
         return result.result_rows[0][0] > 0
-
+    
     async def ensure_table(self):
-        """Создание таблицы если не существует"""
         query = """
         CREATE TABLE IF NOT EXISTS beverages_rag (
             id UUID DEFAULT generateUUIDv4(),
             name String,
             description String,
             category LowCardinality(String),
-            country String,
-            brand String,
+            country Nullable(String),
+            brand Nullable(String),
             abv Nullable(Float32),
             price Nullable(Decimal(10,2)),
             rating Nullable(Float32),
