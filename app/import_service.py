@@ -80,7 +80,7 @@ class ImportService:
         t3 = time.time()
         logger.info(f"Embedding: {t3 - t2:.2f}s")
         # 4. Сохранение в ClickHouse
-        BATCH_INSERT_SIZE = 5000
+        BATCH_INSERT_SIZE = 10000
         rows_gen = ([data['name'],
                      data['description'],
                      self.normalize_category(data['category']),
