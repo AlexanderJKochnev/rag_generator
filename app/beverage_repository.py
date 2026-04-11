@@ -11,7 +11,7 @@ class BeverageRepository:
         self.client = client
         self.table = "beverages_rag"
 
-    async def create(self, data: list, file_hash: str, source_file: str, embedding: List[float]) -> str:
+    async def create(self, data: list) -> str:
         """Создание записи"""
         result = await self.client.insert(
             self.table, data,
@@ -99,7 +99,7 @@ class BeverageRepository:
             f"SELECT COUNT(*) FROM {self.table} WHERE file_hash = %(hash)s", {'hash': file_hash}
         )
         return result.result_rows[0][0] > 0
-    
+
     async def ensure_table(self):
         query = """
         CREATE TABLE IF NOT EXISTS beverages_rag (

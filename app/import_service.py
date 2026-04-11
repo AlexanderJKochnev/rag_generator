@@ -81,9 +81,15 @@ class ImportService:
         logger.info(f"Embedding: {t3 - t2:.2f}s")
         # 4. Сохранение в ClickHouse
         BATCH_INSERT_SIZE = 10000
-        rows_gen = ([data['name'], data['description'], self.normalize_category(data['category']), data.get('country'),
-                     data.get('brand'), data.get('abv'), data.get(
-                         'price'), data.get('rating'), data.get('attributes', {}),
+        rows_gen = ([data['name'],
+                     data['description'],
+                     self.normalize_category(data['category']),
+                     data.get('country'),
+                     data.get('brand'),
+                     data.get('abv'), data.get(
+                         'price'),
+                     data.get('rating'),
+                     data.get('attributes', {}),
                      emb,  # embedding
                      file_hash,  # хэш файла
                      str(file_path)  # source_file
