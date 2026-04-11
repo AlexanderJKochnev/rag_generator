@@ -2,7 +2,6 @@ services:
   import-service:
     env_file:
       - .env
-    runtime: nvidia
     build:
       context: ./app
       dockerfile: Dockerfile
