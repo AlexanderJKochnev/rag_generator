@@ -51,7 +51,7 @@ async def reindex_data_gpu(ch_client, onnx_dir: str):
 
     try:
         # GPU любит большие пачки. Читаем по 20 000 строк.
-        query = f"SELECT {', '.join(columns)} FROM {source_table}"
+        query = f"SELECT {', '.join(columns)} FROM {source_table} WHERE id NOT IN (SELECT id FROM {target_table})"
         settings = {'max_block_size': 20000, 'max_execution_time': 0}
 
         async with await ch_client.query_column_block_stream(query, settings=settings) as stream:

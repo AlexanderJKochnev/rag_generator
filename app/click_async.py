@@ -26,8 +26,8 @@ class ClickHouseManager:
             password=self.password,
             # Опционально: сжатие данных для ускорения сети
             compress=True,
-            connect_timeout=60,
-            send_receive_timeout=300
+            connect_timeout=600,
+            send_receive_timeout=3000
         )
         return self._client
 
