@@ -50,7 +50,7 @@ async def main():
             logger.info("--- Starting ClickHouse Reindexing Mode (GPU) ---")
             # Запуск нашей новой логики с расширенным индексом
             # Передаем клиент и путь к кэшу для ImportEmbedding
-            await reindex_data_gpu(client, str(onnx_dir))
+            await reindex_data_gpu(client, str(cache_dir))
 
     except Exception as e:
         logger.exception(f"Critical error in main: {e}")
