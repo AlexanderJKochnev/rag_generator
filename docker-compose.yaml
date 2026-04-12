@@ -17,6 +17,7 @@ services:
       - ${BIND_VOLUMES}/rag_csv:/app/data
       - ${BIND_VOLUMES}/distill/models:/app/models
       - ${BIND_VOLUMES}/distill/cache:/app/cache
+      - ${BIND_VOLUMES}/distill/onnx:/app/onnx
     environment:
       NVIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: compute,utility

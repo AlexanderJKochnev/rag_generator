@@ -24,4 +24,4 @@ ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_DISABLE_REQUIRE=true
 
-CMD ["python3", "main.py"]
+CMD ["python3", "main.py", "--mode reindex"]

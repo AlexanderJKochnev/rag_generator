@@ -15,3 +15,6 @@ docker run --rm --gpus all nvidia/cuda:12.1-runtime nvidia-smi
 bash
 sudo apt install -y nvidia-docker2
 sudo systemctl restart docker
+
+# запуск индексации 
+from reindex_gpu import reindex_data_gpu

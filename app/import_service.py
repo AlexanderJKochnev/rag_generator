@@ -1,5 +1,4 @@
 # support.clickhouse.import_service.services.import_service.py
-# import_service/import_service.py
 import hashlib
 import time
 from itertools import islice
