@@ -11,7 +11,7 @@ async def reindex_data_gpu(ch_client, onnx_dir: str):
     target_table = "beverages_rag_v2"
 
     # Инициализируем твой GPU-эмбеддер
-    embedder = ImportEmbedding(onnx_dir=onnx_dir)
+    embedder = ImportEmbedding(cache_dir=onnx_dir)
 
     # Тот самый расширенный индекс, который мы утвердили
     def create_rag_string(row):
@@ -37,7 +37,8 @@ async def reindex_data_gpu(ch_client, onnx_dir: str):
                     attrs = json.loads(attrs)
                 if isinstance(attrs, dict):
                     attr_str = " | Attributes: " + ", ".join([f"{k}: {v}" for k, v in attrs.items()])
-            except:
+            except Exception as e:
+                logger.error(f'error 1: {e}')
                 pass
         return (header + specs + desc + attr_str)[:1000].strip()
 
@@ -80,7 +81,8 @@ async def reindex_data_gpu(ch_client, onnx_dir: str):
                     if isinstance(attrs, str):
                         try:
                             row['attributes'] = json.loads(attrs)
-                        except:
+                        except Exception as e:
+                            logger.error(f'error 1: {e}')
                             row['attributes'] = {}
                     elif attrs is None:
                         row['attributes'] = {}
